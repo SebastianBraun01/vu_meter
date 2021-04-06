@@ -1,0 +1,12 @@
+*
+!*/
+
+!.gitignore
+!makefile
+!makefile.sources
+!*_pins.tcl
+!*.vhd
+!*.v
+!ReadMe.md
+!doc/*
+!scripts/*
