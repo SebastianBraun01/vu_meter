@@ -1,10 +1,14 @@
-help:
+options:
 	@echo '"make" does intentionally nothing. Type:'
 	@echo '  "make mproject" to create a new modelsim project only'
 	@echo '  "make compile" to compile all VHDL sources in batch mode'
 	@echo '  "make modelsim" to start modelsim with graphical user interface'
 	@echo '  "make sim" to start modelsim gui with the top testbench of the project'
 	@echo '  "make clean" to remove all generated files'
+
+## Hilfe für Befehle ==============================================================================
+help:
+	quartus_sh.exe --qhelp
 
 
 # Model Projekt erstellen =========================================================================

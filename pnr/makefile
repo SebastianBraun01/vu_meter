@@ -41,7 +41,7 @@ prog: flowsummary.log
 ## FPGA Flash programmieren =======================================================================
 flash: flowsummary.log
 	quartus_cpf.exe -c -d EPCQ16A -s 10CL016Y $(PROJECT).sof $(PROJECT).jic
-	quartus_pgm.exe -c USB-Blaster --mode jtag --operation="p;$(PROJECT).jic"
+	quartus_pgm.exe -c USB-Blaster --mode jtag --operation="pvi;$(PROJECT).jic"
 
 
 ## Projekt in Quartus GUI öffnen ==================================================================
