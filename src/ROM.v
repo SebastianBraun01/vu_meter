@@ -58,7 +58,7 @@ module ROM (
 
   always @(posedge i_clk) begin
     if (i_ren == 1) o_data <= register[i_addr];
-    else o_data <= 2'bzz;
+    else o_data <= 'bZ;
   end
 
 endmodule

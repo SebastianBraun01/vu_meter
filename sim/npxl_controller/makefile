@@ -1,0 +1,8 @@
+PROJECT = npxl_controller
+
+include makefile.sources
+
+SOURCE_FILES = $(SYN_SOURCE_FILES) \
+../../src/t_$(PROJECT).v
+
+include ../makefile
