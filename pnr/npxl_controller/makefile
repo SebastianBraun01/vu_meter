@@ -4,7 +4,7 @@
 
 PROJECT = npxl_controller
 
-include ../../sim/npxl_controller/makefile.sources
+include ../../sim/$(PROJECT)/makefile.sources
 
 SOURCE_FILES = $(SYN_SOURCE_FILES)
 

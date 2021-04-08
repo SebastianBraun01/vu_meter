@@ -4,7 +4,7 @@
 
 PROJECT = npxl_treiber
 
-include ../../sim/npxl_treiber/makefile.sources
+include ../../sim/$(PROJECT)/makefile.sources
 
 SOURCE_FILES = $(SYN_SOURCE_FILES)
 
