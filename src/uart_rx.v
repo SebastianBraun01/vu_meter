@@ -26,7 +26,7 @@ initial begin
   bit_counter = 0;
   rx_data = 8'b00000000;
   o_data = 8'b00000000;
-  o_dv = 1'b0;
+  o_dv = 1'b1;
 end
 
 
@@ -38,6 +38,7 @@ always @(posedge i_clk) begin
       counter <= 0;
       bit_counter <= 0;
       rx_data <= 8'b00000000;
+      o_dv <= 1'b1;
 
       if (i_rx == 1'b0) state <= RX_START;
       else state <= IDLE;
@@ -86,7 +87,6 @@ always @(posedge i_clk) begin
       else begin
         counter <= 0;
         o_data <= rx_data;
-        o_dv <= 1'b1;
         state <= IDLE;
       end
     end

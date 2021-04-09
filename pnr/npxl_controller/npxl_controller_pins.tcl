@@ -1,10 +1,10 @@
 set_location_assignment PIN_E2 -to i_clk
 
 # D5
-#set_location_assignment PIN_T2 -to i_en 
+#set_location_assignment PIN_T2 -to i_send
 
 # D6
-set_location_assignment PIN_G16 -to i_send 
+set_location_assignment PIN_G16 -to i_send
 
 # D7
 set_location_assignment PIN_G15 -to o_npxl_data

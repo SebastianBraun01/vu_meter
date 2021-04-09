@@ -10,7 +10,7 @@ module t_npxl_treiber;
   wire npxl_data;
   wire rdy;
 
-  npxl_treiber #(.LEDS(5)) UUT(
+  npxl_treiber #(.LEDS(5), .ADDR(8)) UUT(
     .i_clk(clk),         // 48MHz -> ~20ns
     .i_en(en),
     .i_color_data(color_data),

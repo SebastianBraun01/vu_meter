@@ -10,7 +10,7 @@ module t_ROM;
 
   integer i;
 
-  ROM UUT(
+  ROM #(.ADDR(256), .ADDR_LINES(8)) UUT(
     .i_clk(clk),
     .i_addr(addr),
     .i_ren(ren),
