@@ -1,32 +1,32 @@
-module RAM #(parameter BREITE = 8, parameter TIEFE = 8) (
+module RAM #(parameter WIDTH = 8, parameter ADDR = 8) (
   input i_clk,
-  input [TIEFE-1:0] i_addr,
+  input [ADDR - 1:0] i_addr,
   input i_rw,       // R=0, W=1
-  input i_write,
-  input wire [BREITE-1:0] i_data,
-  output wire [BREITE-1:0] o_data
+  input i_wen,
+  inout wire [WIDTH - 1:0] io_data
 );
 
-  reg [BREITE-1:0] register [0:2**TIEFE-1];
-  reg [BREITE-1:0] buffer;
+  // Register initialisieren ======================================================================
   integer i;
-
+  reg [WIDTH - 1:0] register [0:2**ADDR - 1];
+  reg [WIDTH - 1:0] buffer;
+  
   initial begin
-    for (i = 0; i < 2**TIEFE; i = i + 1) register[i] = 0;
-    buffer = 0;
+    for (i = 0; i < 2**ADDR; i = i + 1) register[i] = 'b0;
   end
 
+
+  // Speicherlogik ================================================================================
   always @(posedge i_clk) begin
     if (i_rw == 1) begin
-      if (i_write == 1) begin
-        register[i_addr] <= i_data;
+      if (i_wen == 1) begin
+        register[i_addr] <= io_data;
       end
-    end
-    else begin
-      buffer <= register[i_addr];
     end
   end
 
-  assign o_data = i_rw ? 'bZ : buffer;
+
+  // IO Assignment ================================================================================
+  assign io_data = i_rw ? 'bZ : register[i_addr];
 
 endmodule

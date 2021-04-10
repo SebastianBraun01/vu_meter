@@ -9,14 +9,14 @@ module t_RAM;
   reg [1:0] data_in = 2'b00;
 
   wire [1:0] data_out;
+  wire [1:0] data;
 
-  RAM #(.BREITE(2), .TIEFE(2)) UUT(
+  RAM #(.WIDTH(2), .ADDR(2)) UUT(
     .i_clk(clk),
     .i_addr(addr),
     .i_rw(rw),       // R=0, W=1
-    .i_write(write),
-    .i_data(data_in),
-    .o_data(data_out)
+    .i_wen(write),
+    .io_data(data)
   );
 
   // Taktsignal
@@ -50,5 +50,8 @@ module t_RAM;
     #50 addr = 2'b11;
     #50 $finish;
   end
+
+  assign data = rw ? data_in : 2'bZZ;
+  assign data_out = rw ? 2'bZZ : data;
 
 endmodule
