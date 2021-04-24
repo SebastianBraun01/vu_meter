@@ -15,7 +15,7 @@ help:
 mproject : mproject_created
 
 # The real target should be the .mpf file that is modified in each compilation/simulation
-mproject_created : $(SOURCE_FILES)
+mproject_created : makefile.sources
 	# create modelsim project
 	rm -rf ./modelsim_sources.tcl
 	for source_file in $(SOURCE_FILES); do \
@@ -26,12 +26,13 @@ mproject_created : $(SOURCE_FILES)
 
 
 # Kompilieren =====================================================================================
-compile: ./work/_vmake
+compile: ./work/compiled
 
-./work/_vmake: mproject_created
+./work/compiled: mproject_created $(SOURCE_FILES)
 	rm -rf errors.log
 	vsim.exe -c -do "project open $(PROJECT); project calculateorder; quit -f"
 	grep "Errors:\ [1-9]" transcript >> errors.log; if [ -s errors.log ] ; then rm -rf work/_vmake; exit 1; fi
+	touch ./work/compiled
 
 
 # Starte Modelsim GUI =============================================================================
@@ -40,9 +41,13 @@ modelsim: mproject_created
 
 
 # Simulation starten ==============================================================================
-sim: ./work/_vmake
-	#vsim.exe -i -do "project open $(PROJECT); vsim.exe work.t_$(PROJECT)(tbench); add wave *; run -a;" &
-	vsim.exe -i -do "project open $(PROJECT); vsim work.t_$(PROJECT); add wave *; run -a;" &
+sim: ./work/compiled
+	if [ -e wave.do ]; then \
+		vsim.exe -i -do "project open $(PROJECT); vsim work.t_$(PROJECT); do wave.do; run -a;"; \
+	else \
+		vsim.exe -i -do "project open $(PROJECT); vsim work.t_$(PROJECT); add wave *; run -a;"; \
+	fi
+		
 
 
 # Projekt bereinigen ==============================================================================
