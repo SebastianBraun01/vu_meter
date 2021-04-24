@@ -7,6 +7,7 @@
 !*_pins.tcl
 !*.vhd
 !*.v
+!wave.do
 !ReadMe.md
 !doc/*
 !scripts/*
