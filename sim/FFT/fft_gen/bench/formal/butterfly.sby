@@ -1,0 +1,59 @@
+[tasks]
+ck1
+ck2_r0 ck2
+ck2_r1 ck2
+ck3_r0 ck3
+ck3_r1 ck3
+ck3_r2 ck3
+
+[options]
+mode prove
+depth	23
+ck1: depth 22
+ck2: depth 22
+# ck3_r0 succeeds in 35-8 steps in 17min (induction only)
+# ck3_r1 succeeds in 35-5 steps in 38min (induction only)
+# ck3_r2 succeeds in 35-1 steps in 40min (induction only)
+ck3_r0: depth 26
+ck3_r0: depth 28
+ck3_r1: depth 30
+ck3_r2: depth 34
+
+[engines]
+# smtbmc boolector
+smtbmc yices	# Actually runs faster than boolector, perhaps b/c less mem
+# smtbmc z3
+# abc pdr
+# ck1
+# ck2_r0: smtbmc yices	# 11 minutes or so
+# ck2_r1: smtbmc yices  # 3 minutes
+# ck3_r0: smtbmc yices  # 5 minutes
+# ck3_r1 ck3
+# ck3_r2: smtbmc yices  # 59 minutes
+
+
+[script]
+read -formal -DBUTTERFLY convround.v
+read -formal -DBUTTERFLY bimpy.v
+read -formal -DBUTTERFLY longbimpy.v
+read -formal -DBUTTERFLY butterfly.v
+
+# While I'd love to change the width of the inputs and the coefficients,
+# doing so would adjust the width of the firmware multiplies, and so defeat
+# our purpose here.
+# ck1:    chparam -set CKPCE 1 butterfly
+ck1:    chparam -set CKPCE 1 -set CWIDTH 19 -set IWIDTH 15 butterfly
+#
+ck2_r0: chparam -set CKPCE 2 -set CWIDTH 20 -set IWIDTH 12 -set F_CHECK 1 butterfly
+ck2_r1: chparam -set CKPCE 2 -set CWIDTH 16 -set IWIDTH 6 -set F_CHECK 0 butterfly
+#
+ck3_r0: chparam -set CKPCE 3 -set CWIDTH 16 -set IWIDTH 12 -set F_CHECK 0 butterfly
+ck3_r1: chparam -set CKPCE 3 -set CWIDTH 18 -set IWIDTH 14 -set F_CHECK 1 butterfly
+ck3_r2: chparam -set CKPCE 3 -set CWIDTH 20 -set IWIDTH 16 -set F_CHECK 2 butterfly
+prep -top butterfly
+
+[files]
+../../rtl/bimpy.v
+../../rtl/longbimpy.v
+../../rtl/convround.v
+../../rtl/butterfly.v

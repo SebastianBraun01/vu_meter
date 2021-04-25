@@ -1,0 +1,16 @@
+[options]
+mode prove
+depth	17
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal -DQTRSTAGE convround.v
+read -formal -DQTRSTAGE qtrstage.v
+hierarchy -top qtrstage -chparam IWIDTH 3 -chparam OWIDTH 4
+prep -top qtrstage
+
+[files]
+../../rtl/qtrstage.v
+../../rtl/convround.v
