@@ -1,7 +1,8 @@
-module ROM #(parameter ADDR = 256, parameter ADDR_LINES = 8) (
-  input i_clk,
-  input [ADDR_LINES - 1:0] i_addr,
-  input i_ren,
+`default_nettype none
+module ROM #(parameter ADDR = 256) (
+  input wire i_clk,
+  input wire [$clog2(ADDR) - 1:0] i_addr,
+  input wire i_ren,
   output reg [23:0] o_data
 );
 

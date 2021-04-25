@@ -1,8 +1,9 @@
-module npxl_treiber #(parameter LEDS = 20, parameter ADDR = 8) (
-  input i_clk,         // 48MHz -> ~20ns
-  input i_en,
-  input [23:0] i_color_data,
-  output reg [ADDR - 1:0] o_color_reg,
+`default_nettype none
+module npxl_treiber #(parameter LEDS = 20) (
+  input wire i_clk,         // 48MHz -> ~20ns
+  input wire i_en,
+  input wire [23:0] i_color_data,
+  output reg [$clog2(LEDS) - 1:0] o_color_reg,
   output reg o_npxl_data,
   output reg o_rdy
 );
@@ -19,7 +20,7 @@ module npxl_treiber #(parameter LEDS = 20, parameter ADDR = 8) (
   reg [23:0] color_data;
   reg [11:0] counter;
   reg [7:0] bit_counter;
-  reg [ADDR - 1:0] led_counter;
+  reg [$clog2(LEDS) - 1:0] led_counter;
 
   initial begin
     state = IDLE;

@@ -1,26 +1,28 @@
 `timescale 1ns/1ns
-
 module t_uart_rx;
-
   localparam DELAY = 416 * 20;
-  
+
+  // Register initialisieren ======================================================================
   reg clk = 0;
   reg rx = 1;
   
   wire [7:0] data;
   wire valid;
 
-  uart_rx #(.BAUD(115200)) UUT(
+
+  // Testmodule einbinden =========================================================================
+  uart_rx #(.BAUD(115200), .WIDTH(8)) UUT(
     .i_clk(clk),
     .i_rx(rx),
     .o_data(data),
     .o_dv(valid)
   );
 
+
+  // Tasks definieren =============================================================================
   task uart_write_byte;
     input [7:0] i_data;
     integer i;
-
     begin
       rx = 0;
       #(DELAY);
@@ -36,10 +38,12 @@ module t_uart_rx;
     end
   endtask
 
-  always begin
-    #10 clk = ~clk;
-  end
 
+  // Taktsignal ===================================================================================
+  always #10 clk = ~clk;
+
+
+  // Testroutine ==================================================================================
   initial begin
     @(posedge clk);
     uart_write_byte(8'h37);
@@ -51,7 +55,6 @@ module t_uart_rx;
     uart_write_byte(8'h03);
     @(posedge clk);
 
-    $finish;
+    $stop;
   end
-
 endmodule

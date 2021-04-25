@@ -1,30 +1,34 @@
 `timescale 1ns/1ns
-
 module t_RAM;
-
+  // Register initialisieren ======================================================================
   reg clk = 0;
+  reg rst = 0;
   reg [1:0] addr = 2'b00;
   reg rw = 0;
   reg write = 0;
   reg [1:0] data_in = 2'b00;
 
   wire [1:0] data_out;
-  wire [1:0] data;
 
+
+  // Module einbinden =============================================================================
   RAM #(.WIDTH(2), .ADDR(2)) UUT(
     .i_clk(clk),
+    .i_rst(rst),
     .i_addr(addr),
     .i_rw(rw),       // R=0, W=1
     .i_wen(write),
-    .io_data(data)
+    .i_data(data_in),
+    .o_data(data_out)
   );
 
-  // Taktsignal
-  always begin
-    #10 clk = ~clk;
-  end
+  // Taktsignal ===================================================================================
+  always #10 clk = ~clk;
 
+
+  // Testroutine ==================================================================================
   initial begin
+    #5 rst = 1;
     #5 rw = 1;
 
     data_in = 2'b01;
@@ -48,10 +52,9 @@ module t_RAM;
     #50 addr = 2'b01;
     #50 addr = 2'b10;
     #50 addr = 2'b11;
-    #50 $finish;
+
+    #50 rst = 0;
+
+    #50 $stop;
   end
-
-  assign data = rw ? data_in : 2'bZZ;
-  assign data_out = rw ? 2'bZZ : data;
-
 endmodule

@@ -1,7 +1,8 @@
-module uart_rx #(parameter BAUD = 115200) (
-  input i_clk,    // 48MHz -> ~20ns
-  input i_rx,
-  output reg [7:0] o_data,
+`default_nettype none
+module uart_rx #(parameter BAUD = 115200, parameter WIDTH = 8) (
+  input wire i_clk,    // 48MHz -> ~20ns
+  input wire i_rx,
+  output reg [WIDTH - 1:0] o_data,
   output reg o_dv
 );
 
@@ -14,18 +15,18 @@ localparam RX_DATA = 2'b10;
 localparam RX_STOP = 2'b11;
 
 
-// Register Initialisieren ========================================================================
+// Register initialisieren ========================================================================
 reg [1:0] state;
 reg [9:0] counter;
 reg [2:0] bit_counter;
-reg [7:0] rx_data;
+reg [WIDTH - 1:0] rx_data;
 
 initial begin
   state = 0;
   counter = 0;
   bit_counter = 0;
-  rx_data = 8'b00000000;
-  o_data = 8'b00000000;
+  rx_data = 'b0;
+  o_data = 'b0;
   o_dv = 1'b1;
 end
 
@@ -37,7 +38,7 @@ always @(posedge i_clk) begin
     IDLE: begin // --------------------------------------------------------------------------------
       counter <= 0;
       bit_counter <= 0;
-      rx_data <= 8'b00000000;
+      rx_data <= 'b0;
       o_dv <= 1'b1;
 
       if (i_rx == 1'b0) state <= RX_START;

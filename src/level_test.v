@@ -1,6 +1,7 @@
+`default_nettype none
 module level_test (
-  input i_clk,
-  input i_rx,
+  input wire i_clk,
+  input wire i_rx,
   output wire o_npxl_data,
   output wire o_rdy
 );
@@ -28,7 +29,7 @@ module level_test (
     .o_rdy(npxl_rdy)
   );
 
-  uart_rx #(.BAUD(115200)) uart(
+  uart_rx #(.BAUD(115200), .WIDTH(8)) uart(
     .i_clk(i_clk),
     .i_rx(i_rx),
     .o_data(value_data),
