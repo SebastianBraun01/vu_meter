@@ -1,3 +1,16 @@
+## Betriebssystem erkennen
+ifeq ($(WSL_DISTRO_NAME), Ubuntu)
+PREFIX_QUARTUS = quartus.exe
+PREFIX_QUARTUS_SH = quartus_sh.exe
+PREFIX_QUARTUS_CPF = quartus_cpf.exe
+PREFIX_QUARTUS_PGM = quartus_pgm.exe
+else
+PREFIX_QUARTUS = quartus
+PREFIX_QUARTUS_SH = quartus_sh
+PREFIX_QUARTUS_CPF = quartus_cpf
+PREFIX_QUARTUS_PGM = quartus_pgm
+endif
+
 options:
 	@echo '"make" does intentionally nothing. Type:'
 	@echo '  "make qproject" to create quartus project only'
@@ -10,7 +23,7 @@ options:
 
 ## Hilfe für Befehle ==============================================================================
 help:
-	quartus_sh.exe --qhelp
+	$(PREFIX_QUARTUS_SH) --qhelp
 
 
 ## Projekt erstellen ==============================================================================
@@ -23,30 +36,30 @@ $(PROJECT).qpf: $(SYN_SOURCE_FILES) ../../scripts/project_settings.tcl $(PROJECT
 		echo set_global_assignment -name VERILOG_FILE $$source_file >> verilog_source_files.tcl; \
 	done
 
-	quartus_sh.exe -t ../../scripts/project_settings.tcl -projectname $(PROJECT)
+	$(PREFIX_QUARTUS_SH) -t ../../scripts/project_settings.tcl -projectname $(PROJECT)
 
 
 ## Synthese starten ===============================================================================
 compile: flowsummary.log
 
 flowsummary.log: $(PROJECT).qpf ../../scripts/project_flow.tcl
-	quartus_sh.exe -t ../../scripts/project_flow.tcl -projectname $(PROJECT) 
+	$(PREFIX_QUARTUS_SH) -t ../../scripts/project_flow.tcl -projectname $(PROJECT) 
 
 
 ## FPGA programmieren =============================================================================
 prog: flowsummary.log
-	quartus_pgm.exe -c USB-Blaster --mode jtag --operation="p;$(PROJECT).sof"
+	$(PREFIX_QUARTUS_PGM) -c USB-Blaster --mode jtag --operation="p;$(PROJECT).sof"
 
 
 ## FPGA Flash programmieren =======================================================================
 flash: flowsummary.log
-	quartus_cpf.exe -c -d EPCQ16A -s 10CL016Y $(PROJECT).sof $(PROJECT).jic
-	quartus_pgm.exe -c USB-Blaster --mode jtag --operation="pvi;$(PROJECT).jic"
+	$(PREFIX_QUARTUS_CPF) -c -d EPCQ16A -s 10CL016Y $(PROJECT).sof $(PROJECT).jic
+	$(PREFIX_QUARTUS_PGM) -c USB-Blaster --mode jtag --operation="pvi;$(PROJECT).jic"
 
 
 ## Projekt in Quartus GUI öffnen ==================================================================
 quartus: $(PROJECT).qpf
-	quartus.exe $(PROJECT).qpf &
+	$(PREFIX_QUARTUS) $(PROJECT).qpf &
 
 
 ## Projekt bereinigen =============================================================================

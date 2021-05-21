@@ -1,3 +1,13 @@
+## Betriebssystem erkennen
+ifeq ($(WSL_DISTRO_NAME), Ubuntu)
+PREFIX_QUARTUS_SH = quartus_sh.exe
+PREFIX_VSIM = vsim.exe
+else
+PREFIX_QUARTUS_SH = quartus_sh
+PREFIX_VSIM = vsim
+endif
+
+
 options:
 	@echo '"make" does intentionally nothing. Type:'
 	@echo '  "make mproject" to create a new modelsim project only'
@@ -8,7 +18,7 @@ options:
 
 ## Hilfe für Befehle ==============================================================================
 help:
-	quartus_sh.exe --qhelp
+	$(PREFIX_QUARTUS_SH) --qhelp
 
 
 # Model Projekt erstellen =========================================================================
@@ -21,7 +31,7 @@ mproject_created : makefile.sources
 	for source_file in $(SOURCE_FILES); do \
 	  echo project addfile $$source_file >> modelsim_sources.tcl; \
 	done
-	vsim.exe -modelsimini ../../scripts/modelsim.ini -c -do "project new [pwd] $(PROJECT); source ./modelsim_sources.tcl; quit -f"
+	$(PREFIX_VSIM) -modelsimini ../../scripts/modelsim.ini -c -do "project new [pwd] $(PROJECT); source ./modelsim_sources.tcl; quit -f"
 	touch mproject_created
 
 
@@ -30,22 +40,24 @@ compile: ./work/compiled
 
 ./work/compiled: mproject_created $(SOURCE_FILES)
 	rm -rf errors.log
-	vsim.exe -c -do "project open $(PROJECT); project calculateorder; quit -f"
-	grep "Errors:\ [1-9]" transcript >> errors.log; if [ -s errors.log ] ; then rm -rf work/_vmake; exit 1; fi
+	$(PREFIX_VSIM) -c -do "project open $(PROJECT); project calculateorder; quit -f"
+	if [ grep "^#\sErrors:\s0," transcript ]; then \
+		rm -rf work/_vmake; exit 1; \
+	fi
 	touch ./work/compiled
 
 
 # Starte Modelsim GUI =============================================================================
 modelsim: mproject_created
-	vsim.exe -i -do "project open $(PROJECT)" &
+	$(PREFIX_VSIM) -i -do "project open $(PROJECT)" &
 
 
 # Simulation starten ==============================================================================
 sim: ./work/compiled
 	if [ -e wave.do ]; then \
-		vsim.exe -i -do "project open $(PROJECT); vsim work.t_$(PROJECT); do wave.do; run -a;"; \
+		$(PREFIX_VSIM) -i -do "project open $(PROJECT); vsim work.t_$(PROJECT); do wave.do; run -a;"; \
 	else \
-		vsim.exe -i -do "project open $(PROJECT); vsim work.t_$(PROJECT); add wave *; run -a;"; \
+		$(PREFIX_VSIM) -i -do "project open $(PROJECT); vsim work.t_$(PROJECT); add wave *; run -a;"; \
 	fi
 		
 
