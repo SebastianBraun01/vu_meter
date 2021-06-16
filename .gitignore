@@ -1,15 +1,12 @@
-*
-!*/
+src/*.vhd
 
-!.gitignore
-!makefile
-!makefile.sources
-!*_pins.tcl
-!*.vhd
-!*.v
-!wave.do
-!ReadMe.md
-!doc/*
-!scripts/*
-!LICENSE
-
+*.log
+*.csv
+*.mti
+*.mpf
+modelsim_sources.tcl
+mproject_created
+transcript
+*.wlf
+compiled
+sim/*/work
