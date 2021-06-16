@@ -1,5 +1,3 @@
-src/*.vhd
-
 *.log
 *.csv
 *.mti
